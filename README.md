@@ -8,4 +8,5 @@ Setup
 
 Run git clone https://github.com/arlejeun/d3-polymer.git <br>
 cd d3-polymer-test <br>
+Run npm install && bower install <br>
 You can now preview the application by running grunt serve.<br>
