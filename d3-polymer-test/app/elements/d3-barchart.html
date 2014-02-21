@@ -1,0 +1,79 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<script src="../scripts/vendor/d3.min.js"></script>
+
+<polymer-element name="d3-barchart"  attributes="data width height">
+  <template>
+    <style>
+      :host { display: block;}
+      :host .chart rect {
+          fill: steelblue;
+      }
+      :host .chart text {
+        fill: white;
+        font: 10px sans-serif;
+        text-anchor: end;
+      }
+    </style>
+
+     <svg class="chart" height="200">
+      <template repeat="{{ val, i in data }}">
+        <g transform="translate(0, {{trY[i]}})">
+          <rect width="{{xScale[i]}}" height="{{barHeight-1}}"></rect>
+          <text x="{{xScale[i]-3}}" y= "{{(barHeight-1)/2}}" dy=".35em">{{val}}</text>
+        </g>
+      </template>
+    </svg>
+  </template>
+
+  <script>
+
+      Polymer('d3-barchart', {
+        idx: 0,
+        width: 420,
+        height: 120,
+        data : [4,8,15,16,23,42],
+
+        ready: function() {
+          this.initiliaze();
+        },
+
+        initiliaze: function() {
+          this.redraw();
+        },
+
+        redraw: function() {
+          this.nbElements = this.data.length;
+          this.barHeight = (this.height/this.nbElements);
+          this.trY = [],
+          this.xScale = [];
+          for (var j=0;j<this.nbElements;j++) {
+            this.trY[j]=this.barHeight*j;
+            this.xScale[j] = d3.scale.linear().domain([0,d3.max(this.data)]).range([0,this.width])(this.data[j]);
+          }
+        },
+
+        refreshData: function() {
+          if (this.data && this.width) {
+            this.xScale=[];
+            for (var k=0;k<this.data.length;k++) {
+            this.xScale[k] = d3.scale.linear().domain([0,d3.max(this.data)]).range([0,this.width])(this.data[k]);
+            }
+          }
+        },
+
+        dataChanged: function() {
+          this.refreshData();
+        },
+
+        widthChanged: function() {
+          this.redraw();
+        },
+
+        heightChanged: function() {
+          this.redraw();
+        }
+
+    });
+
+  </script>
+</polymer-element>
